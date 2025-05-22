@@ -1,7 +1,7 @@
 package com.engeto.registration_system.controller;
 
-import com.engeto.registration_system.dto.UserRequestDto;
-import com.engeto.registration_system.dto.UserResponseDto;
+import com.engeto.registration_system.dto.UserResponse;
+import com.engeto.registration_system.dto.UserRequest;
 import com.engeto.registration_system.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserRequestDto createUser(@RequestBody @Valid UserResponseDto request) {
+    public UserResponse createUser(@RequestBody @Valid UserRequest request) {
         return userService.createUser(request);
     }
 }

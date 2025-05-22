@@ -1,9 +1,9 @@
 package com.engeto.registration_system.service;
 
-import com.engeto.registration_system.dto.UserRequestDto;
-import com.engeto.registration_system.dto.UserResponseDto;
+import com.engeto.registration_system.dto.UserRequest;
+import com.engeto.registration_system.dto.UserResponse;
 
 public interface UserService {
 
-    UserRequestDto createUser(UserResponseDto request);
+    UserResponse createUser(UserRequest request);
 }

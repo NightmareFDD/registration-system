@@ -37,11 +37,27 @@ public class UserMapper {
      * @param user the user entity
      * @return basic user DTO
      */
-    public UserResponse toDto(User user) {
+    public UserResponse toResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .surname(user.getSurname())
+                .build();
+    }
+
+    /**
+     * Maps a {@link User} entity to a detailed {@link UserResponse}.
+     *
+     * @param user the user entity
+     * @return detailed user DTO
+     */
+    public UserResponse toDetailResponse(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .surname(user.getSurname())
+                .personID(user.getPersonID())
+                .uuid(user.getUuid())
                 .build();
     }
 

@@ -17,12 +17,12 @@ import java.util.UUID;
 public class UserMapper {
 
     /**
-     * Maps a {@link UserResponse} to a {@link User} entity.
+     * Maps a {@link UserRequest} to a {@link User} entity.
      *
      * @param request the user creation DTO
      * @return mapped User entity
      */
-    public User toEntity(UserRequest request) {
+    public User toRequest(UserRequest request) {
         User user = new User();
         user.setName(request.getName());
         user.setSurname(request.getSurname());

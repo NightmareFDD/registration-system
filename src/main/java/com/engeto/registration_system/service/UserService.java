@@ -2,7 +2,6 @@ package com.engeto.registration_system.service;
 
 import com.engeto.registration_system.dto.UserRequest;
 import com.engeto.registration_system.dto.UserResponse;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -12,5 +11,7 @@ public interface UserService {
 
     UserResponse getUser(Long id, boolean detail);
 
-    List<UserResponse> getAllUsers(@RequestParam(defaultValue = "false") boolean detail);
+    List<UserResponse> getAllUsers(boolean detail);
+
+    UserResponse updateUser(Long id, UserRequest request);
 }

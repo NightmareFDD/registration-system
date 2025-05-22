@@ -1,0 +1,10 @@
+### PUT request to example server
+PUT http://localhost:8080/api/v1/users/1
+Content-Type: application/json
+
+{
+  "name": "Daniel",
+  "surname": "Schwarz"
+}
+
+###

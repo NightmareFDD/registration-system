@@ -1,4 +1,4 @@
 ### DELETE request to example server
-DELETE http://localhost:8080/api/v1/users/2
+DELETE http://localhost:8080/api/v1/users/1
 
 ###

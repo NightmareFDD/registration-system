@@ -57,6 +57,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(updated);
     }
 
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+        log.info("User with ID {} deleted successfully", id);
+    }
+
+
     // === Helper methods ===
 
     private User findUserById(Long id) {

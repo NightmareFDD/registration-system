@@ -9,7 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 /**
- * Component responsible for mapping between User entities and DTO objects.
+ * Mapper class responsible for converting between {@link User} entities
+ * and DTOs: {@link UserRequest} and {@link UserResponse}.
+ *
+ * <p>This class is used by the service layer to map incoming requests to entities
+ * and convert entities to response objects returned by the API.</p>
  */
 
 @Slf4j
@@ -17,12 +21,13 @@ import java.util.UUID;
 public class UserMapper {
 
     /**
-     * Maps a {@link UserRequest} to a {@link User} entity.
+     * Converts a {@link UserRequest} DTO into a {@link User} entity.
+     * UUID is generated automatically in this method.
      *
-     * @param request the user creation DTO
-     * @return mapped User entity
+     * @param request the DTO with user input data
+     * @return new {@link User} entity with generated UUID
      */
-    public User toRequest(UserRequest request) {
+    public User toEntity(UserRequest request) {
         User user = new User();
         user.setName(request.getName());
         user.setSurname(request.getSurname());
@@ -32,10 +37,11 @@ public class UserMapper {
     }
 
     /**
-     * Maps a {@link User} entity to a lightweight {@link UserResponse}.
+     * Converts a {@link User} entity to a basic {@link UserResponse} DTO.
+     * This version includes only ID, name, and surname.
      *
-     * @param user the user entity
-     * @return basic user DTO
+     * @param user the {@link User} entity to convert
+     * @return a simplified {@link UserResponse} DTO
      */
     public UserResponse toResponse(User user) {
         return UserResponse.builder()
@@ -46,10 +52,11 @@ public class UserMapper {
     }
 
     /**
-     * Maps a {@link User} entity to a detailed {@link UserResponse}.
+     * Converts a {@link User} entity to a detailed {@link UserResponse} DTO.
+     * This version includes ID, name, surname, personID, and UUID.
      *
-     * @param user the user entity
-     * @return detailed user DTO
+     * @param user the {@link User} entity to convert
+     * @return a detailed {@link UserResponse} DTO with all public fields
      */
     public UserResponse toDetailResponse(User user) {
         return UserResponse.builder()

@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse createUser(@NotNull UserRequest request) {
         validatePersonId(request.getPersonID());
         ensurePersonIdIsUnique(request.getPersonID());
-        User user = userMapper.toRequest(request);
+        User user = userMapper.toEntity(request);
         User saved = userRepository.save(user);
         log.info("User created with ID: {} and UUID: {}", user.getId(), user.getUuid());
 

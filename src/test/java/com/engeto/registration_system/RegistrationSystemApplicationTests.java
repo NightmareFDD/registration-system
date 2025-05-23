@@ -1,5 +1,6 @@
 package com.engeto.registration_system;
 
+import com.engeto.registration_system.dto.UserRequest;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
@@ -11,8 +12,7 @@ import org.testcontainers.containers.MySQLContainer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 0)
@@ -35,7 +35,8 @@ class RegistrationSystemApplicationTests {
         RestAssured.port = port;
     }
 
-    @Test @Order(1)
+    @Test
+    @Order(1)
     void shouldCreateUser() {
         String createUserJson = """
                 {
@@ -59,14 +60,66 @@ class RegistrationSystemApplicationTests {
         assertThat(responseBodyString, Matchers.is("{\"id\":1,\"name\":\"Petr\",\"surname\":\"Klement\"}"));
     }
 
-    @Test @Order(2)
+    @Test
+    @Order(2)
+    void shouldReturn400WhenPersonIdIsNotAllowed() {
+        String invalidId = "invalidPers01";
+        var requestBody = new UserRequest("Tomáš", "Novák", invalidId);
+
+        given()
+                .contentType("application/json")
+                .body(requestBody)
+                .when()
+                .post("/api/v1/users")
+                .then()
+                .statusCode(400)
+                .body("error", equalTo("Validation failed"))
+                .body("details", equalTo("personID: personID must be exactly 12 characters"));
+    }
+
+    @Test
+    @Order(3)
+    void shouldReturn409WhenPersonIdAlreadyExists() {
+        String existingId = "nS7tJ0qR5wGh";
+        var requestBody = new UserRequest("Eva", "Bílá", existingId);
+
+        given()
+                .contentType("application/json")
+                .body(requestBody)
+                .when()
+                .post("/api/v1/users")
+                .then()
+                .statusCode(409)
+                .body("error", equalTo("User already exists"))
+                .body("details", equalTo("User with personID already exists: " + existingId));
+    }
+
+    @Test
+    @Order(4)
+    void shouldReturn400WhenPersonIdIsTooShort() {
+        String shortId = "shortID";
+        var requestBody = new UserRequest("Lucie", "Krátká", shortId);
+
+        given()
+                .contentType("application/json")
+                .body(requestBody)
+                .when()
+                .post("/api/v1/users")
+                .then()
+                .statusCode(400)
+                .body("error", equalTo("Validation failed"))
+                .body("details", equalTo("personID: personID must be exactly 12 characters"));
+    }
+
+    @Test
+    @Order(5)
     void shouldUpdateUser() {
         String updateBody = """
-            {
-               "name": "Updated",
-               "surname": "User"
-            }
-            """;
+                {
+                   "name": "Updated",
+                   "surname": "User"
+                }
+                """;
 
         given()
                 .contentType("application/json")
@@ -81,7 +134,32 @@ class RegistrationSystemApplicationTests {
                 .body("surname", equalTo("User"));
     }
 
-    @Test @Order(3)
+    @Test
+    @Order(6)
+    void shouldReturn400WhenUpdatingWithBlankName() {
+        String invalidUpdateJson = """
+                {
+                    "name" : "",
+                    "surname": ""
+                 }
+                """;
+        given()
+                .contentType("application/json")
+                .pathParam("id", 1)
+                .body(invalidUpdateJson)
+                .when()
+                .put("/api/v1/users/{id}")
+                .then()
+                .statusCode(400)
+                .body("error", equalTo("Validation failed"))
+                .body("details", Matchers.allOf(
+                        containsString("name: nesmí být prázdná"),
+                        containsString("surname: nesmí být prázdná")
+                ));
+    }
+
+    @Test
+    @Order(7)
     void shouldGetAllUsers() {
         given()
                 .when()
@@ -91,7 +169,8 @@ class RegistrationSystemApplicationTests {
                 .body("size()", greaterThanOrEqualTo(1));
     }
 
-    @Test @Order(4)
+    @Test
+    @Order(8)
     void shouldGetUserById() {
         given()
                 .pathParam("id", 1)
@@ -104,7 +183,8 @@ class RegistrationSystemApplicationTests {
                 .body("surname", equalTo("User"));
     }
 
-    @Test @Order(5)
+    @Test
+    @Order(9)
     void shouldDeleteUser() {
         given()
                 .pathParam("id", 1)

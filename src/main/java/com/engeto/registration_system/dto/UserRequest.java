@@ -12,16 +12,16 @@ import lombok.*;
 @Builder
 public class UserRequest {
 
-    @NotBlank(groups = ValidationGroups.Update.class)
+    @NotBlank(groups = {ValidationGroups.Update.class, ValidationGroups.Create.class})
     @Size(min = 2, max = 50,
-            groups = ValidationGroups.Update.class,
-            message = "Surname must be between 2 and 30 characters long.")
+            groups = {ValidationGroups.Update.class, ValidationGroups.Create.class},
+            message = "Name must be between 2 and 30 characters long.")
     @JsonView({Views.Public.class, Views.Update.class})
     private String name;
 
-    @NotBlank(groups = ValidationGroups.Update.class)
+    @NotBlank(groups = {ValidationGroups.Update.class, ValidationGroups.Create.class})
     @Size(min = 2, max = 50,
-            groups = ValidationGroups.Update.class,
+            groups = {ValidationGroups.Update.class, ValidationGroups.Create.class},
             message = "Surname must be between 2 and 50 characters long.")
     @JsonView({Views.Public.class, Views.Update.class})
     private String surname;
